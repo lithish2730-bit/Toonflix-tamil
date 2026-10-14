@@ -38,14 +38,47 @@ function openDetails(id){const item=catalogue.find(i=>i.id===id);if(!item)return
  $('#detailsBody').innerHTML=`<div class="detail-hero"><div class="detail-poster">${posterMarkup(item)}</div><div class="detail-copy"><span class="detail-meta">${esc(item.type.toUpperCase())} • ${esc(item.genre||'GENERAL')} • ${esc(item.year||'NEW')}</span><h2>${esc(item.title)}</h2><p>${esc(item.description||'No description added yet.')}</p><div class="hero-buttons"><button class="primary-btn" data-play="${esc(id)}">▶ ${item.type==='series'?'Play first episode':'Play now'}</button><button class="secondary-btn" data-fav="${esc(id)}">${saved?'♥ Added to My List':'♡ Add to My List'}</button></div></div></div>${item.type==='series'?`<section class="section"><div class="section-head"><div><h2>Episodes</h2><p>${episodes.length} episode${episodes.length===1?'':'s'} available</p></div></div><div class="episode-list">${episodes.length?episodes.map((e,n)=>`<div class="episode-row"><div class="episode-play">▶</div><div><b>${esc(e.title||`Episode ${n+1}`)}</b><small>Episode ${n+1}</small></div><button class="play-now" data-episode="${esc(id)}" data-epindex="${n}">PLAY ↗</button></div>`).join(''):'<div class="empty">No episodes yet. Add episodes in Admin.</div>'}</div></section>`:''}`;
  $('#detailsModal').classList.remove('hidden');
 }
-function openPlayer(item, video, label){if(!video){toast('No video URL added yet. Open Admin to add an authorized video link.');return}
- $('#playerBody').innerHTML='';const wrap=document.createElement('div');wrap.className='video-frame';
- const url=video.trim();
- if(/youtube\.com\/embed\/|player\.vimeo\.com\/video\//i.test(url)){const iframe=document.createElement('iframe');iframe.src=url;iframe.allow='autoplay; fullscreen; picture-in-picture';iframe.allowFullscreen=true;iframe.title=label||item.title;wrap.appendChild(iframe)}
- else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)){const v=document.createElement('video');v.src=url;v.controls=true;v.autoplay=true;v.playsInline=true;v.preload='metadata';wrap.appendChild(v)}
- else {const msg=document.createElement('div');msg.style.cssText='padding:24px;text-align:center;color:#bbb;font-size:13px';msg.innerHTML='This link may not support direct playback.<br><a target="_blank" rel="noopener noreferrer" style="color:#ff839b;display:inline-block;margin-top:12px" href="'+esc(url)+'">Open video link ↗</a>';wrap.appendChild(msg)}
- $('#playerBody').append(wrap);const cap=document.createElement('div');cap.className='player-caption';cap.textContent=label||item.title;$('#playerBody').append(cap);
- history=[item.id,...history.filter(x=>x!==item.id)].slice(0,20);save();$('#playerModal').classList.remove('hidden');render();
+
+function openPlayer(item, video, label) {
+  if (!video) {
+    toast('No video URL added yet.');
+    return;
+  }
+
+  const url = video.trim();
+  $('#playerBody').innerHTML = '';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'video-frame';
+
+  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+    const v = document.createElement('video');
+    v.src = url;
+    v.controls = true;
+    v.autoplay = true;
+    v.playsInline = true;
+    v.preload = 'metadata';
+    wrap.appendChild(v);
+  } else {
+    const msg = document.createElement('div');
+    msg.style.cssText =
+      'padding:24px;text-align:center;color:#bbb;font-size:13px';
+    msg.textContent =
+      'This link is not a supported direct video URL. Use an authorized video source.';
+    wrap.appendChild(msg);
+  }
+
+  $('#playerBody').append(wrap);
+
+  const cap = document.createElement('div');
+  cap.className = 'player-caption';
+  cap.textContent = label || item.title;
+  $('#playerBody').append(cap);
+
+  history = [item.id, ...history.filter(x => x !== item.id)].slice(0, 20);
+  save();
+  $('#playerModal').classList.remove('hidden');
+  render();
 }
 function playItem(id,episodeIndex=null){const item=catalogue.find(i=>i.id===id);if(!item)return;if(item.type==='series'&&episodeIndex===null){if(item.episodes?.length){openPlayer(item,item.episodes[0].video,`${item.title} — ${item.episodes[0].title||'Episode 1'}`)}else toast('Add episode video links in Admin first.')}else if(episodeIndex!==null){const ep=item.episodes?.[episodeIndex];if(ep)openPlayer(item,ep.video,`${item.title} — ${ep.title||`Episode ${episodeIndex+1}`}`)}else openPlayer(item,item.video)}
 function toggleFav(id){favourites=favourites.includes(id)?favourites.filter(x=>x!==id):[...favourites,id];save();render();if(!$('#detailsModal').classList.contains('hidden'))openDetails(id);toast(favourites.includes(id)?'Added to My List':'Removed from My List')}
