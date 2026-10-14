@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08090d">
+  <meta name="description" content="ToonFlix Tamil — a personal streaming catalogue for videos you have permission to share.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <title>ToonFlix Tamil</title>
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" id="homeBtn" aria-label="Go home"><span class="brand-mark">▶</span><span>TOON<span class="accent">FLIX</span><small>TAMIL</small></span></button>
+    <nav class="desktop-nav"><button data-view="home" class="nav-link active">Home</button><button data-view="movies" class="nav-link">Movies</button><button data-view="series" class="nav-link">Series</button><button data-view="mylist" class="nav-link">My List</button></nav>
+    <div class="top-actions"><button class="icon-btn" id="searchToggle" aria-label="Search">⌕</button><button class="admin-btn" id="adminOpen">Admin</button></div>
+  </header>
+  <section id="searchBar" class="search-bar hidden"><input id="searchInput" placeholder="Search movies, series..." autocomplete="off"><button id="clearSearch">✕</button></section>
+  <main>
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <span class="eyebrow"><span class="live-dot"></span> YOUR PERSONAL STREAMING SPACE</span>
+        <h1>Stories that<br><span class="accent">stay with you.</span></h1>
+        <p>Discover your next favourite movie or series.</p>
+        <div class="hero-buttons"><button class="primary-btn" id="heroExplore">▶ Explore titles</button><button class="secondary-btn" id="heroInfo">ⓘ How it works</button></div>
+      </div>
+      <div class="hero-art"><div class="orb orb1"></div><div class="orb orb2"></div><div class="hero-emblem">TF<span>+</span></div><div class="hero-tag">TAMIL • MOVIES • SERIES</div></div>
+    </section>
+    <section id="notice" class="notice"><span>ⓘ</span><div><b>Demo catalogue</b><p>Add your own videos or authorized video links in Admin. Sample titles are placeholders.</p></div></section>
+    <section id="contentView"></section>
+  </main>
+  <footer><span class="footer-logo">TOON<span class="accent">FLIX</span> TAMIL</span><span>Made for your personal video collection</span><span class="footer-note">Upload only content you own or are authorized to distribute.</span></footer>
+
+  <nav class="mobile-nav">
+    <button data-view="home" class="active"><span>⌂</span>Home</button><button data-view="movies"><span>▣</span>Movies</button><button data-view="series"><span>▤</span>Series</button><button data-view="mylist"><span>♡</span>My List</button>
+  </nav>
+
+  <div id="detailsModal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card details-card"><button class="close-btn" data-close="detailsModal">✕</button><div id="detailsBody"></div></div></div>
+  <div id="playerModal" class="modal hidden" role="dialog" aria-modal="true"><div class="player-card"><button class="close-btn player-close" data-close="playerModal">✕</button><div id="playerBody"></div></div></div>
+  <div id="adminModal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card admin-card"><button class="close-btn" data-close="adminModal">✕</button><div class="admin-heading"><span class="admin-icon">⚙</span><div><h2>Content studio</h2><p>Add and manage your catalogue on this device.</p></div></div>
+    <div class="admin-warning">Prototype mode: this admin panel is not password-protected and changes are stored only in this browser. Do not use it for a public production service.</div>
+    <form id="contentForm" class="content-form">
+      <label>Title<input name="title" required maxlength="90" placeholder="e.g. My Short Film"></label>
+      <div class="form-row"><label>Type<select name="type"><option value="movie">Movie</option><option value="series">Series</option></select></label><label>Genre<input name="genre" placeholder="Drama, Comedy"></label></div>
+      <label>Poster image URL<input name="poster" type="url" placeholder="https://..."></label>
+      <label>Description<textarea name="description" rows="3" placeholder="Short description"></textarea></label>
+      <label>Video URL (optional for series)<input name="video" type="url" placeholder="Direct MP4 or authorized embeddable URL"></label>
+      <label>For series: episodes (one per line, format: Episode title | video URL)<textarea name="episodes" rows="3" placeholder="Episode 1 | https://example.com/episode1.mp4"></textarea></label>
+      <button class="primary-btn full-btn" type="submit">＋ Add to catalogue</button>
+    </form>
+    <div class="admin-bottom"><button id="exportBtn" class="secondary-btn">Export catalogue JSON</button><label class="import-label secondary-btn">Import JSON<input type="file" id="importFile" accept="application/json"></label><button id="resetBtn" class="danger-btn">Reset demo</button></div>
+    <div id="adminList" class="admin-list"></div>
+  </div></div>
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>

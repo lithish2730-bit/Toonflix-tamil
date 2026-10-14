@@ -1,0 +1,10 @@
+{
+  "name": "ToonFlix Tamil",
+  "short_name": "ToonFlix",
+  "description": "Personal streaming catalogue",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#08090d",
+  "theme_color": "#08090d",
+  "icons": []
+}
